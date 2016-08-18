@@ -124,22 +124,29 @@ $(document).ready(function () {
 </div>
 
 
+<div id="monday-22nd-august-2016" class="section level1">
+<h1>Monday 22nd August 2016</h1>
+<div id="last-updated-2016-08-18" class="section level5">
+<h5>Last updated : 2016-08-18</h5>
+</div>
+</div>
 <div id="introduction" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
+<h1>Introduction</h1>
 <p>One of the main benefits of the UK Governments Open Data initiative is the ability to perform exploratory data analysis using a wide range of data at no extra cost. This will allow you as researchers to explore data and methods prior to developing complex models.</p>
 <p>This document details how you can use Open Source software and Open Data to explore exposure to road traffic accidents.</p>
 <div id="software" class="section level2">
-<h2><span class="header-section-number">1.1</span> Software</h2>
+<h2>Software</h2>
 <p>To perform this exploratory data analysis we will be using R (<a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>) and R Studio (<a href="https://www.rstudio.com/products/rstudio/#Desktop" class="uri">https://www.rstudio.com/products/rstudio/#Desktop</a>). R and R Studio are platform independent suite of software which allow us to build geospatial models, perform statistical analysis and produce reproducible research in one environment. You will need to download and install these software on your machine to continue with this tutorial.</p>
 </div>
 </div>
 <div id="project-setup" class="section level1">
-<h1><span class="header-section-number">2</span> Project Setup</h1>
-<p>Once you have installed R and R Studio we need to acquire the data that will allow us to explore the aims above. In the scripts folder you will find a script (DataAquisition.R) to download the data, pre-process it and a r-markdown document detailing the sources.</p>
+<h1>Project Setup</h1>
+<p>Once you have installed R and R Studio we need to acquire the data that will allow us to explore the aims above. Download the r-project zip file from here : <a href="https://github.com/richfry/IPDLN/raw/master/IPDLN_R_Project.zip" class="uri">https://github.com/richfry/IPDLN/raw/master/IPDLN_R_Project.zip</a></p>
+<p>In the scripts folder you will find a script (DataAquisition.R) to download the data, pre-process it and a r-markdown pdf document detailing the data sources. Run the DataAquisition.R file to setup directories and download and extract the data.</p>
 </div>
 <div id="data-preparation" class="section level1">
-<h1><span class="header-section-number">3</span> Data Preparation</h1>
-<p>The first step is to load the data into R for analysis. Create a new script (Ctrl+Shift+N, Command+Shift+N) - and use the following code to load your data into R.</p>
+<h1>Data Preparation</h1>
+<p>The first step is to load the data into R for analysis. Create a new script (Ctrl+Shift+N on Windows, Command+Shift+N on Mac) - and use the following code to load your data into R.</p>
 <pre class="r"><code>pkgs = c(&quot;ggplot2&quot;, &quot;plyr&quot;, &quot;dplyr&quot;, &quot;GISTools&quot;, &quot;rgdal&quot;, &quot;rgeos&quot;, &quot;reshape2&quot;, 
     &quot;DT&quot;)
 
@@ -219,7 +226,7 @@ census.final &lt;- census.final[, c(&quot;mnemonic&quot;, &quot;All.usual.reside
     &quot;Females&quot;, &quot;children&quot;, &quot;adults&quot;)]</code></pre>
 </div>
 <div id="aims" class="section level1">
-<h1><span class="header-section-number">4</span> Aims</h1>
+<h1>Aims</h1>
 <p>The aim of this document is to demonstrate how we can use Open Data to model exposure to road traffic accidents using small area geographies. Specifically, we want to explore four different models of exposure and map the outputs to visualise the differences. These models can be broadly split into two categories:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Basic injury rates</strong>
@@ -235,12 +242,12 @@ census.final &lt;- census.final[, c(&quot;mnemonic&quot;, &quot;All.usual.reside
 </ol>
 </div>
 <div id="creating-rates" class="section level1">
-<h1><span class="header-section-number">5</span> Creating Rates</h1>
+<h1>Creating Rates</h1>
 <p>A principal method in epidemiology is to describe distributions of disease or injury and identify populations at risk. One of the main methods you can use to estimate to explore those populations at risk is to create a ratio - for example:</p>
 <p><span class="math display">\[ Injury Rate =  \frac {number\ of\ injuries}{exposed\ population} \]</span></p>
 <p>In this example we will be using road accident data published by the UK Government (Stats 19), population data in the form of census data and road network data published by the Ordnance Survey to explore the spatial distribution of the risk of being involved in a road traffic accident.</p>
 <div id="basic-rates" class="section level2">
-<h2><span class="header-section-number">5.1</span> Basic Rates</h2>
+<h2>Basic Rates</h2>
 <p>The first step in creating a basic rate is to create counts of accidents by a small area geography - in this case a Lower Level Super Output area (LSOA). As there is an LSOA code attached to the Stats19 data we can just create a summary count by grouping on LSOA code as follows:</p>
 <pre class="r"><code># create a count of accidents by LSOA
 stats19.lsoa &lt;- Stats19.final %&gt;% group_by(LSOA_of_Accident_Location) %&gt;% dplyr::summarise(n_accidents = n())</code></pre>
@@ -258,8 +265,8 @@ injury.rates &lt;- left_join(stats19.lsoa, census.final)
 injury.rates &lt;- left_join(injury.rates, welsh.roads)</code></pre>
 <p>This results in a final table of data as follows:</p>
 <pre class="r"><code>datatable(head(injury.rates))</code></pre>
-<div id="htmlwidget-7426" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7426">{"x":{"data":[["1","2","3","4","5","6"],["W01000001","W01000002","W01000003","W01000004","W01000005","W01000006"],[27,21,24,47,60,45],[1115,1263,2507,1282,1938,1534],[546,625,1235,623,933,776],[569,638,1272,659,1005,758],[138,245,511,242,303,268],[977,1018,1996,1040,1635,1266],[6.159,6.441,0.499,5.076,1.37,2.324],[0,0,0.463,4.413,5.388,10.703],[0,0,0,0,0,0],[18.098,11.642,5.514,17.706,7.592,23.001],[32.424,10.73,11.334,15.956,14.299,26.356],[56.681,28.813,17.81,43.151,28.649,62.384]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> \u003c/th>\n      <th>id\u003c/th>\n      <th>n_accidents\u003c/th>\n      <th>All.usual.residents\u003c/th>\n      <th>Males\u003c/th>\n      <th>Females\u003c/th>\n      <th>children\u003c/th>\n      <th>adults\u003c/th>\n      <th>A Road\u003c/th>\n      <th>B Road\u003c/th>\n      <th>Motorway\u003c/th>\n      <th>Not Classified\u003c/th>\n      <th>Unclassified\u003c/th>\n      <th>Total\u003c/th>\n    \u003c/tr>\n  \u003c/thead>\n\u003c/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"callback":null,"filter":"none"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-575" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-575">{"x":{"data":[["1","2","3","4","5","6"],["W01000001","W01000002","W01000003","W01000004","W01000005","W01000006"],[27,21,24,47,60,45],[1115,1263,2507,1282,1938,1534],[546,625,1235,623,933,776],[569,638,1272,659,1005,758],[138,245,511,242,303,268],[977,1018,1996,1040,1635,1266],[6.159,6.441,0.499,5.076,1.37,2.324],[0,0,0.463,4.413,5.388,10.703],[0,0,0,0,0,0],[18.098,11.642,5.514,17.706,7.592,23.001],[32.424,10.73,11.334,15.956,14.299,26.356],[56.681,28.813,17.81,43.151,28.649,62.384]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> \u003c/th>\n      <th>id\u003c/th>\n      <th>n_accidents\u003c/th>\n      <th>All.usual.residents\u003c/th>\n      <th>Males\u003c/th>\n      <th>Females\u003c/th>\n      <th>children\u003c/th>\n      <th>adults\u003c/th>\n      <th>A Road\u003c/th>\n      <th>B Road\u003c/th>\n      <th>Motorway\u003c/th>\n      <th>Not Classified\u003c/th>\n      <th>Unclassified\u003c/th>\n      <th>Total\u003c/th>\n    \u003c/tr>\n  \u003c/thead>\n\u003c/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"callback":null,"filter":"none"},"evals":[],"jsHooks":[]}</script>
 <p>We can map this using some simple code in R to show the distribution of accidents:</p>
 <pre class="r"><code># make the shapefile ggplot2 friendly
 welsh.lsoa.fortify &lt;- fortify(welsh.lsoa, region = &quot;code&quot;)
@@ -335,7 +342,7 @@ ggplot() + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group,
 </div>
 </div>
 <div id="refined-rates" class="section level1">
-<h1><span class="header-section-number">6</span> Refined Rates</h1>
+<h1>Refined Rates</h1>
 <p>The previous section demonstrated how we can create basic rates of accidents per head of population or rates of accidents per km of road. These give an initial overview of the spatial distribution of accidents, however, they don’t really tell us anything about the accidents, people or roads involved. We can create a new adjusted risk model where we more precisely define the numerators and denominators:</p>
 <p><span class="math display">\[AR_i=\sum{\frac{injuries_{ir}}{total_r * basic\ rate}}\]</span></p>
 <p>Where <span class="math inline">\(AR\)</span> = adjusted rate, <span class="math inline">\(_i\)</span> = geographical unit, <span class="math inline">\(_r\)</span> = adjusment variable (e.g. Road Type, Age, Sex)</p>
@@ -427,8 +434,8 @@ stats19.lsoa.road &lt;- stats19.lsoa.road[, c(&quot;LSOA_of_Accident_Location&qu
 stats19.lsoa.road &lt;- plyr::rename(stats19.lsoa.road, c(LSOA_of_Accident_Location = &quot;id&quot;))
 
 datatable(head(stats19.lsoa.road))</code></pre>
-<div id="htmlwidget-5429" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5429">{"x":{"data":[["1","2","3","4","5","6"],["W01000001","W01000002","W01000003","W01000004","W01000005","W01000006"],[17,14,2,13,23,23],[0,0,3,21,28,19],[10,7,19,13,9,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> \u003c/th>\n      <th>id\u003c/th>\n      <th>n_A_Roads\u003c/th>\n      <th>n_B_Roads\u003c/th>\n      <th>n_C_Roads\u003c/th>\n    \u003c/tr>\n  \u003c/thead>\n\u003c/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"callback":null,"filter":"none"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6880" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6880">{"x":{"data":[["1","2","3","4","5","6"],["W01000001","W01000002","W01000003","W01000004","W01000005","W01000006"],[17,14,2,13,23,23],[0,0,3,21,28,19],[10,7,19,13,9,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> \u003c/th>\n      <th>id\u003c/th>\n      <th>n_A_Roads\u003c/th>\n      <th>n_B_Roads\u003c/th>\n      <th>n_C_Roads\u003c/th>\n    \u003c/tr>\n  \u003c/thead>\n\u003c/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"callback":null,"filter":"none"},"evals":[],"jsHooks":[]}</script>
 <p>No we have created the counts by road type we can create rates by road classification as an adjusted rate by using the accidents by road type.</p>
 <pre class="r"><code># join tables
 road.class.rates &lt;- left_join(welsh.roads.itn, stats19.lsoa.road)
@@ -471,7 +478,7 @@ ggplot() + geom_polygon(data = plot.data.ar, aes(x = long, y = lat, group = grou
 <p>Try mapping the other rates and see how the maps change - this will give us an idea of the spatial distribution of road traffic accidents adjusted for road type.</p>
 </div>
 <div id="further-work" class="section level1">
-<h1><span class="header-section-number">7</span> Further Work</h1>
+<h1>Further Work</h1>
 <p>This web page has gone through the very basic process of creating rates of exposure by small geographic areas. The data we have used is freely available to download and re-use, and contains a wealth of information that you could use to perform your own data exploration. For example:</p>
 <ul>
 <li>Rates by sex</li>
